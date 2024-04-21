@@ -1,0 +1,28 @@
+name: Staging Deployment
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v1
+
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VM_HOST_STAGING }}
+          username: ${{ secrets.VM_USERNAME_STAGING }}
+          key: ${{ secrets.VM_SSH_KEY_STAGING }}
+          script: |
+            cd ~/documents/studentHubFrontend/
+            git pull
+            yarn install
+            yarn build
+            docker compose up web -d --build

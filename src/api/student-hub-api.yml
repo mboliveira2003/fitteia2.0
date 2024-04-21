@@ -1,0 +1,2055 @@
+# This is the yml file that defines the API endpoints
+#
+# To add a new endpoint, add a new path under paths
+# To add a new response object, add a new object under components/schemas
+# To add a new tag, add a new tag under tags
+#
+# For more information about the OpenAPI Specification, see https://swagger.io/specification/
+# To debug your yml code, you can use https://editor.swagger.io/
+
+openapi: 3.0.3
+info:
+  title: student-hub-api
+  version: "0.0"
+  description: Api Documentation for StudentHub API
+
+paths:
+  # Auth
+  /v0.0/auth/register:
+    post:
+      operationId: register
+      description: Register a new user
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userName:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                partnerName:
+                  type: string
+                firebaseUserId:
+                  type: string
+                selfAssesment:
+                  type: number
+                schoolId:
+                  type: integer
+                currentSchoolYearId:
+                  type: integer
+                gradeYearDistributions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      schoolYearId:
+                        type: integer
+                      grade:
+                        type: number
+              required:
+                - userName
+                - firstName
+                - lastName
+                - firebaseUserId
+                - selfAssesment
+                - schoolId
+                - currentSchoolYearId
+                - gradeYearDistribution
+                - partnerName
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      userId:
+                        type: integer
+                    required:
+                      - email
+                      - userId
+                required:
+                  - data
+  /v0.0/auth/login:
+    post:
+      operationId: login
+      description: User login
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      userId:
+                        type: integer
+                      jwt:
+                        type: string
+                    required:
+                      - email
+                      - userId
+                      - jwt
+                required:
+                  - data
+
+  # User
+  /v0.0/user/:
+    get:
+      operationId: checkUser
+      description: Check if user exists
+      tags:
+        - user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: boolean
+                required:
+                  - data
+
+  # Membership
+  /v0.0/memberships/check/masterclass/matA:
+    get:
+      operationId: checkMasterclassMatA
+      description: Check if user has purchased of masterclass matA
+      tags:
+        - memberships
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/Membership"
+                required:
+                  - data
+
+  # Schools
+  /v0.0/schools/all:
+    get:
+      operationId: getSchools
+      description: Get all schools
+      tags:
+        - schools
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/School"
+
+  # Settings
+  /v0.0/settings/change/profilePicture:
+    post:
+      operationId: changeProfilePicture
+      description: Change profile picture
+      tags:
+        - settings
+      parameters:
+        - name: imageUrl
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/change/email:
+    post:
+      operationId: changeEmail
+      description: Change email
+      tags:
+        - settings
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/change/password:
+    post:
+      operationId: changePassword
+      description: Change password
+      tags:
+        - settings
+      parameters:
+        - name: password
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/change/username:
+    post:
+      operationId: changeUsername
+      description: Change username
+      tags:
+        - settings
+      parameters:
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/change/schoolYear:
+    post:
+      operationId: changeSchoolYear
+      description: Change school year
+      tags:
+        - settings
+      parameters:
+        - name: schoolYearId
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/change/school:
+    post:
+      operationId: changeSchool
+      description: Change school
+      tags:
+        - settings
+      parameters:
+        - name: schoolId
+          in: query
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/change/name/first:
+    post:
+      operationId: changeFirstName
+      description: Change first name
+      tags:
+        - settings
+      parameters:
+        - name: firstName
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/change/name/last:
+    post:
+      operationId: changeLastName
+      description: change last name
+      tags:
+        - settings
+      parameters:
+        - name: lastName
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/settings/get:
+    get:
+      operationId: getUserProfile
+      description: Get user profile settings
+      tags:
+        - settings
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/UserInfo"
+                required:
+                  - data
+  # Exercise Listing
+  /v0.0/exercises/schoolYears:
+    get:
+      operationId: getSchoolYears
+      description: Get all school years
+      tags:
+        - exercise-listing
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Year"
+  /v0.0/exercises/schoolYear/topics:
+    get:
+      operationId: getTopics
+      description: Get all topics for a school year
+      tags:
+        - exercise-listing
+      parameters:
+        - name: schoolYearId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Topic"
+  /v0.0/exercises/schoolYear/subTopics:
+    get:
+      operationId: getSchoolYearSubtopics
+      description: Get all subtopics for a school year
+      tags:
+        - exercise-listing
+      parameters:
+        - name: schoolYearId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Subtopic"
+  /v0.0/exercises/topic/subTopics:
+    get:
+      operationId: getSubtopics
+      description: Get all subtopics for a topic
+      tags:
+        - exercise-listing
+      parameters:
+        - name: topicId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Subtopic"
+  /v0.0/exercises/subTopic/exercises:
+    get:
+      operationId: getExercisesAndUrl
+      description: Get all exercises for a subtopic
+      tags:
+        - exercise-listing
+      parameters:
+        - name: subTopicId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      exercises:
+                        type: object
+                        properties:
+                          content:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/ExerciseBasicInfo"
+                      notesUrl:
+                        type: string
+                    required:
+                      - exercises
+                      - notesUrl
+                required:
+                  - data  
+                    
+  # Exercise Completion
+  /v0.0/exercises/submit:
+    post:
+      operationId: submitExercise
+      description: Submit an exercise
+      tags:
+        - exercise-completion
+      parameters:
+        - name: exerciseId
+          in: query
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                answer:
+                  type: string
+                numberHints:
+                  type: integer
+              required:
+                - answer
+                - numberHints
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExerciseFeedback"
+  /v0.0/exercises/get:
+    get:
+      operationId: getExercise
+      description: Get an exercise by id
+      tags:
+        - exercise-completion
+      parameters:
+        - name: exerciseId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Exercise"
+                required:
+                  - data
+
+  # Courses & Tasks
+  /v0.0/course/tasks/submit:
+    post:
+      operationId: submitTask
+      description: Submit a task
+      tags:
+        - courses-tasks
+      parameters:
+        - name: taskId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskFeedback"
+  /v0.0/course/topics:
+    get:
+      operationId: getCourseTopics
+      description: Get all topics for a course
+      tags:
+        - courses-tasks
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      courseTopicDTOs:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/CourseTopic"
+                      overallPercentage:
+                        type: integer
+                    required:
+                      - courseTopicDTOs
+                      - overallPercentage
+                required:
+                  - data
+  /v0.0/course/subtopics:
+    get:
+      operationId: getCourseSubtopics
+      description: Get all subtopics for a course topic
+      tags:
+        - courses-tasks
+      parameters:
+        - name: topicId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CourseSubtopic"
+                required:
+                  - data
+  /v0.0/course/tasks:
+    get:
+      operationId: getCourseTasks
+      description: Get all tasks for a course subtopic
+      tags:
+        - courses-tasks
+      parameters:
+        - name: subTopicId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Task"
+                required:
+                  - data
+
+  #Exams
+  /v0.0/exams/all:
+    get:
+      operationId: getExams
+      description: Get all exams
+      tags:
+        - exams
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Exam"
+  /v0.0/exams/submit:
+    post:
+      operationId: submitExam
+      description: Submit an exam
+      tags:
+        - exams
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                examId:
+                  type: integer
+                answers:
+                  type: array
+                  items:
+                    type: string
+                timeElaped:
+                  type: integer
+              required:
+                - examId
+                - answers
+                - timeElaped
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExamFeedback"
+  /v0.0/exams/history:
+    get:
+      operationId: getExamHistory
+      description: Get exam history
+      tags:
+        - exams
+      parameters:
+        - name: examId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ExamSubmission"
+                required:
+                  - data
+  /v0.0/exams/profile:
+    get:
+      operationId: getExamProfile
+      description: Get exam profile
+      tags:
+        - exams
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/ExamProfile"
+                required:
+                  - data
+
+  #Tests
+  /v0.0/tests/all:
+    get:
+      operationId: getTests
+      description: Get all tests
+      tags:
+        - tests
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Test"
+  /v0.0/tests/add:
+    post:
+      operationId: addTest
+      description: Add a test
+      tags:
+        - tests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date-time
+                title:
+                  type: string
+                subTopics:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      subTopicId:
+                        type: integer
+                      percentage:
+                        type: number
+              required:
+                - date
+                - subTopics
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/Test"
+                required:
+                  - data
+  /v0.0/tests/delete:
+    delete:
+      operationId: deleteTest
+      description: Delete a test
+      tags:
+        - tests
+      parameters:
+        - name: testEventId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                required:
+                  - data
+  /v0.0/tests/profile:
+    get:
+      operationId: getTestProfile
+      description: Get test profile
+      tags:
+        - tests
+      parameters:
+        - name: testEventId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/TestProfile"
+                required:
+                  - data
+  /v0.0/tests/testEvent:
+    get:
+      operationId: getTestEvents
+      description: Get all test events by test id
+      tags:
+        - tests
+      parameters:
+        - name: testEventId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TestInfo"
+                required:
+                  - data
+  /v0.0/tests/test:
+    post:
+      operationId: createTest
+      description: create a test
+      tags:
+        - tests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                testEventId:
+                  type: integer
+                difficulty:
+                  type: integer
+                numberOfExercises:
+                  type: integer
+                isExam:
+                  type: boolean
+                questionType:
+                  type: integer
+              required:
+                - testEventId
+                - difficulty
+                - numberOfExercises
+                - isExam
+                - questionType
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/TestInfo"
+                required:
+                  - data
+  /v0.0/tests/submit:
+    post:
+      operationId: submitTest
+      description: Submit a test
+      tags:
+        - tests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                testId:
+                  type: integer
+                timeElapsed:
+                  type: integer
+                answers:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - testEventId
+                - timeElapsed
+                - answers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/TestFeedback"
+                required:
+                  - data
+
+  # Leaderboard
+  /v0.0/leaderboard/schools/correct:
+    get:
+      operationId: getSchoolsLeaderboardCorrect
+      description: Get leaderboard for schools based on correct answers
+      tags:
+        - leaderboard
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/School"
+                  pageable:
+                    type: object
+                    $ref: "#/components/schemas/Pageable"
+                  totalElements:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  last:
+                    type: boolean
+                  size:
+                    type: integer
+                  number:
+                    type: integer
+                  sort:
+                    type: object
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  numberOfElements:
+                    type: integer
+                  first:
+                    type: boolean
+                  empty:
+                    type: boolean
+
+  /v0.0/leaderboard/users/correct:
+    get:
+      operationId: getUsersLeaderboardCorrect
+      description: Get leaderboard for users based on correct answers
+      tags:
+        - leaderboard
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  content:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UserInfo"
+                  pageable:
+                    type: object
+                    $ref: "#/components/schemas/Pageable"
+                  totalElements:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  last:
+                    type: boolean
+                  size:
+                    type: integer
+                  number:
+                    type: integer
+                  sort:
+                    type: object
+                    properties:
+                      empty:
+                        type: boolean
+                      sorted:
+                        type: boolean
+                      unsorted:
+                        type: boolean
+                  numberOfElements:
+                    type: integer
+                  first:
+                    type: boolean
+                  empty:
+                    type: boolean
+
+  /v0.0/leaderboard/user/rank:
+    get:
+      operationId: getUserRank
+      description: Get leaderboard rank for user
+      tags:
+        - leaderboard
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: number
+  /v0.0/profile/stats:
+    get:
+      operationId: getProfileStats
+      description: Get stats for a user profile
+      tags:
+        - profile
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      gradePrediction:
+                        type: number
+                      rank:
+                        type: number
+                      totalExercisesDone:
+                        type: number
+                      totalExercisesCorrect:
+                        type: number
+                      totalExamsDone:
+                        type: number
+                      totalTestsDone:
+                        type: number
+                      exercisesDonePerDay:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            date:
+                              type: string
+                            exercisesDone:
+                              type: number
+                      topicPercentageDistribution:
+                        $ref: "#/components/schemas/TopicPercentageDistribution"
+  /v0.0/profile/graph:
+    get:
+      operationId: getGraphData
+      description: Get graph data for a user
+      tags:
+        - profile
+      parameters:
+        - name: timePeriod
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      exercisesDonePerDay:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            exercisesDone:
+                              type: number
+                            date:
+                              type: string
+                              format: date-time
+                required:
+                  - data
+  /v0.0/profile/test-graph:
+    get:
+      operationId: getTestGraphData
+      description: Get test graph data for a user
+      tags:
+        - profile
+      parameters:
+        - name: timePeriod
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      exercisesDonePerDay:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            exercisesDone:
+                              type: number
+                            date:
+                              type: string
+                              format: date-time
+                required:
+                  - data
+  /checkout/hosted/course/mat:
+    post:
+      operationId: checkoutMasterClass
+      description: get stripe link for user checkout
+      tags:
+        - payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerName:
+                  type: string
+                customerEmail:
+                  type: string
+              required:
+                - customerName
+                - customerEmail
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                required:
+                  - data
+
+  #Stats
+  /v0.0/streaks/user:
+    post:
+      operationId: getStreaks
+      description: Get user daily streak
+      tags:
+        - stats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: number
+                required:
+                  - data
+
+components:
+  schemas:
+    # Exercise Listing
+    Year:
+      type: object
+      properties:
+        schoolYearId:
+          type: integer
+        year:
+          type: string
+        percentage:
+          type: number
+      required:
+        - schoolYearId
+        - name
+    Subject:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        name:
+          type: string
+        percentage:
+          type: number
+      required:
+        - subjectId
+        - name
+    Topic:
+      type: object
+      properties:
+        topicId:
+          type: integer
+        name:
+          type: string
+        percentage:
+          type: number
+      required:
+        - topicId
+        - name
+    Subtopic:
+      type: object
+      properties:
+        subTopicId:
+          type: integer
+        name:
+          type: string
+        percentage:
+          type: number
+        totalExercises:
+          type: integer
+        numberExercisesdoneByUser:
+          type: integer
+      required:
+        - subTopicId
+        - name
+    ExerciseBasicInfo:
+      type: object
+      properties:
+        exerciseId:
+          type: integer
+        isAnswered:
+          type: boolean
+        difficulty:
+          type: integer
+        isMultipleChoice:
+          type: boolean
+        isExam:
+          type: boolean
+      required:
+        - exerciseId
+        - isAnswered
+        - difficulty
+        - isMultipleChoice
+    Exercise:
+      type: object
+      properties:
+        exerciseId:
+          type: integer
+        subTopic:
+          type: object
+          properties:
+            subTopicId:
+              type: integer
+            name:
+              type: string
+            topic:
+              type: object
+              properties:
+                topicId:
+                  type: integer
+                name:
+                  type: string
+                subject:
+                  type: object
+                  properties:
+                    subjectId:
+                      type: integer
+                    name:
+                      type: string
+                  required:
+                    - subjectId
+                    - name
+                schoolYear:
+                  type: object
+                  properties:
+                    schoolYearId:
+                      type: integer
+                    year:
+                      type: string
+                  required:
+                    - schoolYearId
+                    - year
+              required:
+                - topicId
+                - name
+                - subject
+                - schoolYear
+          required:
+            - subTopicId
+            - name
+            - topic
+        externalId:
+          type: string
+        author:
+          type: string
+        difficulty:
+          type: integer
+        answer:
+          type: string
+        image:
+          type: string
+        isMultipleChoice:
+          type: boolean
+        tips:
+          type: array
+          items:
+            type: string
+        isDone:
+          type: boolean
+
+      required:
+        - exerciseId
+        - subTopic
+        - externalId
+        - author
+        - difficulty
+        - answer
+        - image
+        - isMultipleChoice
+        - tips
+    ExerciseFeedback:
+      type: object
+      properties:
+        exerciseAttemptId:
+          type: integer
+        answer:
+          type: string
+        isCorrect:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        userId:
+          type: integer
+        exerciseId:
+          type: integer
+      required:
+        - exerciseAttemptId
+        - answer
+        - isCorrect
+        - createdAt
+        - userId
+        - exerciseId
+
+    # Authentication
+    UserInfo:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        userId:
+          type: integer
+        jwt:
+          type: string
+        username:
+          type: string
+        profilePicture:
+          type: string
+        school:
+          $ref: "#/components/schemas/School"
+        totalCorrectAnswers:
+          type: integer
+        rank:
+          type: integer
+        schoolYear:
+          $ref: "#/components/schemas/SchoolYear"
+      required:
+        - email
+        - userId
+        - jwt
+        - username
+        - profilePicture
+        - school
+
+    # Schools
+    School:
+      type: object
+      properties:
+        schoolId:
+          type: integer
+        schoolName:
+          type: string
+        schoolDistrict:
+          type: string
+        schoolMunicipality:
+          type: string
+        totalUsers:
+          type: integer
+        totalCorrectAnswers:
+          type: integer
+        totalQuestionsAnswered:
+          type: integer
+        rank:
+          type: integer
+      required:
+        - schoolId
+        - schoolName
+        - schoolDistrict
+        - schoolMunicipality
+        - totalUsers
+        - totalCorrectAnswers
+        - totalQuestionsAnswered
+        - rank
+
+    # SchoolYear
+    SchoolYear:
+      type: object
+      properties:
+        schoolYearId:
+          type: integer
+        year:
+          type: string
+      required:
+        - schoolYearId
+        - yearƒ
+
+    # Courses & Tasks
+    Task:
+      type: object
+      properties:
+        taskId:
+          type: integer
+        contentType:
+          type: integer
+        content:
+          type: string
+        taskName:
+          type: string
+        isDone:
+          type: boolean
+      required:
+        - taskId
+        - contentType
+        - content
+        - taskName
+        - isDone
+    TaskFeedback:
+      type: object
+      properties:
+        taskStatusUserId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - taskStatusUserId
+        - createdAt
+    CourseTopic:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        percentageDone:
+          type: number
+      required:
+        - id
+        - name
+        - percentageDone
+        - overallPercentage
+    CourseSubtopic:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        percentageDone:
+          type: number
+      required:
+        - id
+        - name
+        - percentageDone
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        percentageDone:
+          type: integer
+      required:
+        - id
+        - name
+        - percentageDone
+
+    # Exams
+    Exam:
+      type: object
+      properties:
+        examId:
+          type: integer
+        examName:
+          type: string
+        criteriaPdf:
+          type: string
+        solutionPdf:
+          type: string
+        examPdf:
+          type: string
+        exercises:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExerciseBasicInfo"
+        isDone:
+          type: boolean
+        bestGrade:
+          type: number
+        bestSubTopic:
+          type: string
+        worstSubTopic:
+          type: string
+      required:
+        - examId
+        - examName
+        - criteriaPdf
+        - solutionPdf
+        - examPdf
+        - exercises
+        - isDone
+        - bestGrade
+        - bestSubTopic
+        - worstSubTopic
+    ExamFeedback:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            examId:
+              type: integer
+            examName:
+              type: string
+            criteriaPdf:
+              type: string
+            solutionPdf:
+              type: string
+            examPdf:
+              type: string
+            grade:
+              type: number
+            gradeDistribution:
+              type: array
+              items:
+                type: object
+                properties:
+                  subTopicId:
+                    type: integer
+                  subTopicName:
+                    type: string
+                  numberTotalExercises:
+                    type: integer
+                  numberCorrectExercises:
+                    type: integer
+                  numberIncorrectExercises:
+                    type: integer
+    ExamSubmission:
+      type: object
+      properties:
+        examId:
+          type: integer
+        examName:
+          type: string
+        criteriaPdf:
+          type: string
+        solutionPdf:
+          type: string
+        examPdf:
+          type: string
+        grade:
+          type: number
+        timeElaped:
+          type: integer
+        gradeDistribution:
+          type: array
+          items:
+            type: object
+            properties:
+              subTopicId:
+                type: integer
+              subTopicName:
+                type: string
+              numberTotalExercises:
+                type: integer
+              numberCorrectExercises:
+                type: integer
+              numberIncorrectExercises:
+                type: integer
+        userAnswers:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+    ExamProfile:
+      type: object
+      properties:
+        percentageExamsSubmited:
+          type: number
+        percentageCourseDone:
+          type: number
+        rankUser:
+          type: number
+        userProfileImage:
+          type: string
+        topics:
+          type: array
+          items:
+            type: object
+            properties:
+              topicName:
+                type: string
+              topicGrade:
+                type: number
+        gradePrediction:
+          type: number
+
+    #TopicPercentageDistribution
+    TopicPercentageDistribution:
+      type: array
+      items:
+        type: object
+        properties:
+          topicName:
+            type: string
+          percentage:
+            type: number
+      required:
+        - topicName
+        - percentage
+
+    # Tests
+    Test:
+      type: object
+      properties:
+        testEventId:
+          type: integer
+        userId:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        subTopics:
+          type: array
+          items:
+            type: object
+            properties:
+              testEventSubTopicId:
+                type: integer
+              subTopic:
+                type: object
+                properties:
+                  subTopicId:
+                    type: integer
+                  name:
+                    type: string
+              percentage:
+                type: integer
+        bestGrade:
+          type: integer
+        bestSubTopic:
+          type: string
+        worstSubTopic:
+          type: string
+        title: 
+          type: string
+    TestProfile:
+      type: object
+      properties:
+        percentageTests:
+          type: number
+        percentageCourse:
+          type: number
+        userProfileImage:
+          type: string
+        topics:
+          type: array
+          items:
+            type: object
+            properties:
+              topicName:
+                type: string
+              topicGrade:
+                type: number
+        gradePrediction:
+          type: number
+    TestFeedback:
+      type: object
+      properties:
+        submissionId:
+          type: integer
+        grade:
+          type: integer
+        timeElapsed:
+          type: integer
+        userAnswers:
+          type: array
+          items:
+            type: string
+        gradeDistribution:
+          type: array
+          items:
+            type: object
+            properties:
+              subTopicId:
+                type: integer
+              subTopicName:
+                type: string
+              numberTotalExercises:
+                type: integer
+              numberCorrectExercises:
+                type: integer
+              numberIncorrectExercises:
+                type: integer
+        createdAt:
+          type: string
+          format: date-time
+    TestInfo:
+      type: object
+      properties:
+        testId:
+          type: integer
+        testEventId:
+          type: integer
+        difficulty:
+          type: integer
+        numberOfExercises:
+          type: integer
+        isExam:
+          type: boolean
+        questionType:
+          type: integer
+        exercises:
+          type: array
+          items:
+            type: object
+            properties:
+              exerciseId:
+                type: integer
+              subTopic:
+                type: object
+                properties:
+                  subTopicId:
+                    type: integer
+                  name:
+                    type: string
+                  topic:
+                    type: object
+                    properties:
+                      topicId:
+                        type: integer
+                      name:
+                        type: string
+                      subject:
+                        type: object
+                        properties:
+                          subjectId:
+                            type: integer
+                          name:
+                            type: string
+                      schoolYear:
+                        type: object
+                        properties:
+                          schoolYearId:
+                            type: integer
+                          year:
+                            type: string
+              externalId:
+                type: string
+              author:
+                type: string
+              difficulty:
+                type: integer
+              answer:
+                type: string
+              image:
+                type: string
+              isMultipleChoice:
+                type: boolean
+              isDone:
+                type: boolean
+              tips:
+                type: array
+                items:
+                  type: string
+        createdAt:
+          type: string
+          format: date-time
+        bestGrade:
+          type: integer
+        bestSubTopic:
+          type: string
+        worstSubTopic:
+          type: string
+        timeElapsed:
+          type: integer
+        testResult:
+          $ref: "#/components/schemas/TestFeedback"
+
+    # Membership
+    Membership:
+      type: object
+      properties:
+        membershipUsersLogId:
+          type: integer
+        startDate:
+          type: string
+          format: date-time
+        masterclass:
+          type: object
+          properties:
+            membershipId:
+              type: integer
+            name:
+              type: string
+            membershipPaymentTypes:
+              type: array
+              items:
+                type: object
+                properties:
+                  membershipPaymentTypeId:
+                    type: integer
+                  name:
+                    type: string
+                  duration:
+                    type: integer
+                  amount:
+                    type: integer
+
+    # Error
+    ErrorResponse:
+      type: object
+      properties:
+        msg:
+          type: string
+
+    #Memberships
+    MasterClass:
+      type: object
+      properties:
+        membershipId:
+          type: number
+        name:
+          type: string
+        membershipPaymentTypes:
+          type: array
+          items:
+            type: object
+            properties:
+              membershipPaymentTypeId:
+                type: integer
+              name:
+                type: string
+              duration:
+                type: string
+              amount:
+                type: number
+    #Pageable
+    Pageable:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+        sort:
+          type: object
+          properties:
+            empty:
+              type: boolean
+            sorted:
+              type: boolean
+            unsorted:
+              type: boolean
+        offset:
+          type: integer
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+
+tags:
+  - name: exercise-listing
+    description: Exercise list-related endpoints
+  - name: exercise-completion
+    description: Exercise completion-related endpoints
+  - name: authentication
+    description: Authentication-related endpoints
+  - name: leaderboard
+    description: Leaderboard related endpoints
+  - name: profile
+    description: user stats endpoints
+  - name: payment
+    description: user payments
+  - name: membership
+    description: user memberships

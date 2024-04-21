@@ -1,0 +1,19 @@
+networks:
+  studenthub-network:
+    external: true
+
+services:
+  web:
+    container_name: web
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/letsencrypt:/etc/letsencrypt:ro"
+      - "/etc/ssl/certs/dhparam.pem:/etc/ssl/certs/dhparam.pem:ro"
+    networks:
+      - studenthub-network
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+
