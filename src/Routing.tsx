@@ -49,10 +49,12 @@ const PublicRoutes: JSX.Element = (
 
 const PrivateRoutes: JSX.Element = (
   <Routes>
-    <Route path="/my-fits" element={<Authenticated />} />
+    <Route path="/my-fits" element={<Authenticated />}>
+      <Route index element={<div />} />
+    </Route>
     <Route path="/fit-env/:fit-id" element={<Authenticated />}>
       <Route path="datasets" element={<div />} />
-      <Route path="functions" element={<div/>} />
+      <Route path="functions" element={<div />} />
       <Route path="parameters" element={<div />} />
     </Route>
     <Route path="*" element={<Navigate to="/my-fits" />} />
