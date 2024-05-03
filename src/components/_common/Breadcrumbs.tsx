@@ -60,7 +60,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ pages }: BreadcrumbsProps) => {
                 )
               }
 
-              <a
+              <div
                 onClick={page.onClick}
                 className={`font-small text-sm text-gray-400 hover:text-gray-600 ${
                   pages.indexOf(page) === pages.length - 1
@@ -71,7 +71,7 @@ const Breadcrumbs: FC<BreadcrumbsProps> = ({ pages }: BreadcrumbsProps) => {
                 <p className="animate-in fade-in slide-in-from-left-2">
                   {page.name}
                 </p>
-              </a>
+              </div>
             </div>
           </li>
         ))}

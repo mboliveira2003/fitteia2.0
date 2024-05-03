@@ -1,5 +1,6 @@
 import { FC, ReactElement, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import TopographyPattern from "components/_common/visuals/backgrounds/TopographyPattern";
 import Logo from "components/_common/visuals/brand/Logo.tsx";
@@ -31,12 +32,12 @@ const Signup: FC = (): ReactElement => {
           {/* Sign up link */}
           <p className=" text-center text-sm text-stone-500">
             Already have an account?{" "}
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className=" cursor-pointer leading-6 text-orange-700 underline-offset-2 transition-all duration-300 ease-in-out hover:text-orange-600"
             >
               Sign In
-            </a>
+            </Link>
           </p>
         </div>
       </div>
